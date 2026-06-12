@@ -38,6 +38,12 @@ export const modules = [
     sources: ['CPI', 'MHIM_METHODOLOGY', 'KFF_PREMIUMS', 'SP500', 'GOLD', 'MEDIAN_HOME', 'WAGE'],
   },
   {
+    id: 'cpi-methodology',
+    label: 'CPI Methodology',
+    component: 'CPIMethodologyTab',
+    sources: ['GEOMEAN_1999', 'CPI_U_RS', 'OER_CHANGE', 'MORTGAGE30', 'HEDONIC', 'HEDONIC_CROSSVAL', 'SHADOWSTATS', 'BOSKIN', 'BLS_HISTORY', 'CPI'],
+  },
+  {
     id: 'gold-analysis',
     label: 'Gold Analysis',
     component: 'GoldAnalysisTab',

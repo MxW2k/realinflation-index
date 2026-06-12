@@ -273,8 +273,42 @@ export const sources = {
     description: 'Median new home sales price. Q1 2026: $403,200.',
     usedIn: ['gold-analysis'],
   },
+
+  // ── Added: CPI methodology era selector (June 2026) ──
+  GEOMEAN_1999: {
+    label: 'BLS: Geometric Mean Formula Estimate (1999)',
+    fredId: null,
+    url: 'https://www.bls.gov/opub/ted/1999/Mar/wk4/art03.htm',
+    description:
+      "BLS's own pre-implementation estimate: the geometric mean formula (Jan 1999, ~61% of basket) lowers the annual CPI rate by approximately 0.2 percentage point.",
+    usedIn: ['cpi-methodology'],
+  },
+  CPI_U_RS: {
+    label: 'BLS CPI-U-RS Research Series',
+    fredId: null,
+    url: 'https://www.bls.gov/cpi/research-series/r-cpi-u-rs-home.htm',
+    description:
+      "BLS's retroactive application of current methods to 1978+. Ran 0.45pp/yr below official CPI over 1978-98, with the widest gaps before 1983 (housing). BLS quantified the methodology effect themselves.",
+    usedIn: ['cpi-methodology'],
+  },
+  HEDONIC_CROSSVAL: {
+    label: 'BLS: Cross-Validation of Quality-Adjustment Methods (2018)',
+    fredId: null,
+    url: 'https://www.bls.gov/opub/mlr/2018/article/cross-validation-of-quality-adjustment-methods.htm',
+    description:
+      "BLS Monthly Labor Review study: hedonics' net effect is small and mixed-direction — hedonic rent and apparel indexes raised measured inflation. Non-shelter hedonics cover ~2.9% of the basket.",
+    usedIn: ['cpi-methodology'],
+  },
+  BLS_HISTORY: {
+    label: 'BLS: History of CPI Revisions and Improvements',
+    fredId: null,
+    url: 'https://www.bls.gov/opub/hom/cpi/history.htm',
+    description:
+      'The full BLS-published list of CPI revisions 1978-2018. Basis for the "moves the number" vs "operational" classification on the CPI Methodology tab.',
+    usedIn: ['cpi-methodology'],
+  },
 }
 
 // Modules that exist in the registry but aren't built yet — used by
 // the References tab to group "Upcoming modules" separately.
-export const UPCOMING_MODULE_IDS = ['cpi-methodology', 'wealth-share', 'hours-to-freedom']
+export const UPCOMING_MODULE_IDS = ['wealth-share', 'hours-to-freedom']

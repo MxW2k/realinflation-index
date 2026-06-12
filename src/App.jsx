@@ -8,6 +8,7 @@ import Tier2NecessitiesTab from './components/Tier2NecessitiesTab'
 import Tier3DiscretionaryTab from './components/Tier3DiscretionaryTab'
 import MHIMvsCPITab from './components/MHIMvsCPITab'
 import GoldAnalysisTab from './components/GoldAnalysisTab'
+import CPIMethodologyTab from './components/CPIMethodologyTab'
 import DataTableTab from './components/DataTableTab'
 import ReferencesTab from './components/ReferencesTab'
 import HoursToFreedomTab from './components/HoursToFreedomTab'
@@ -20,6 +21,7 @@ const COMPONENTS = {
   Tier2NecessitiesTab,
   Tier3DiscretionaryTab,
   MHIMvsCPITab,
+  CPIMethodologyTab,
   GoldAnalysisTab,
   DataTableTab,
   ReferencesTab,

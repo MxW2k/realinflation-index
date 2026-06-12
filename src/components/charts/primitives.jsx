@@ -39,7 +39,7 @@ const fmt = (v) =>
 export function TerminalChart({
   rows, series, height = 250,
   leftLabel, leftLabelColor, rightLabel, rightLabelColor,
-  legend = true, xTicks,
+  legend = true, xTicks, logY = false,
 }) {
   const hasRight = series.some((s) => s.axis === 'right')
   // Numeric x values → time-proportional axis: 1971→1980 spans 9× the
@@ -64,6 +64,7 @@ export function TerminalChart({
         <YAxis
           yAxisId="left" tick={TICK} stroke={AXIS} tickLine={false} width={52}
           tickFormatter={fmt}
+          scale={logY ? 'log' : 'auto'} domain={logY ? ['auto', 'auto'] : undefined} allowDataOverflow={logY}
           label={leftLabel ? { value: leftLabel, angle: -90, position: 'insideLeft', fill: leftLabelColor || '#8b949e', fontSize: 9 } : undefined}
         />
         {hasRight && (
