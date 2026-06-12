@@ -245,8 +245,8 @@ function StatusSection() {
 export default function Tier1AssetsTab() {
   const { hoursArr } = useWage()
 
-  const homeRows = toRows(YEARS, { home: hoursArr('home') })
-  const farmRows = toRows(YEARS, { farm: hoursArr('farm') })
+  const homeRows = toRows(YR_LABELS, { home: hoursArr('home') }) // bars: even spacing
+  const farmRows = toRows(YR_LABELS, { farm: hoursArr('farm') }) // bars: even spacing
   const spRows = toRows(YEARS, { sp: hoursArr('sp500') })
   const metalRows = toRows(YEARS, { gold: hoursArr('gold'), silver: hoursArr('silver') })
 
