@@ -101,7 +101,7 @@ export default function MHIMvsCPITab() {
         <h4>📐 Why Dollar Mode &gt; Hours-Labor Mode for Public Argument</h4>
         <p>
           Dollar mode (MHIM 3,182 vs CPI 875) is the better rhetorical tool because it doesn't require
-          explaining the hours-of-labor standard. The S&P at +7,900%, housing at +1,645%, gold at +10,883% vs
+          explaining the hours-of-labor standard. The S&P at +8,010%, housing at +1,645%, gold at +9,859% vs
           CPI at +775% is immediately legible. Hours-labor mode is more analytically honest but requires more
           setup.
         </p>

@@ -119,7 +119,7 @@ export const sources = {
     url: 'https://www.bls.gov/cpi/additional-resources/improvements-cpi-health-insurance-index.htm',
     description:
       'BLS retained earnings method — tracks insurer margin, not premium. Produced inverted inflation signals during COVID. BLS-acknowledged limitation.',
-    usedIn: ['cpi-methodology'],
+    usedIn: ['cpi-methodology', 'tier2-necessities'],
   },
   MHIM_METHODOLOGY: {
     label: 'MHIM Methodology (Internal)',
@@ -199,13 +199,63 @@ export const sources = {
     usedIn: ['tier3-discretionary', 'table'],
   },
 
+  // ── Added: expanded asset taxonomy (June 2026) ──
+  DIV_YIELD: {
+    label: 'S&P 500 Dividend Yield',
+    fredId: null,
+    url: 'https://www.multpl.com/s-p-500-dividend-yield/table/by-year',
+    description:
+      'Multpl/Robert Shiller data. 3.10% (1971) → 1.06% (June 2026). The yield collapse means ~3× more capital is required for the same dividend income — the quiet engine of rising freedom costs.',
+    usedIn: ['tier1-assets'],
+  },
+  GS10_YIELD: {
+    label: '10-Year Treasury Yield',
+    fredId: 'GS10',
+    url: 'https://fred.stlouisfed.org/series/GS10',
+    description:
+      'Annual averages. 6.16% (1971), 11.46% (1980), 0.89% (2020), 4.48% (May 2026). Used for the bond-ladder income calculation.',
+    usedIn: ['tier1-assets'],
+  },
+  CASE_SHILLER_NAT: {
+    label: 'Case-Shiller National Home Price Index',
+    fredId: 'CSUSHPISA',
+    url: 'https://fred.stlouisfed.org/series/CSUSHPISA',
+    description:
+      'Repeat-sales index (Jan 2000 = 100), series begins 1987. Tracks same-home appreciation — a cleaner read on metro housing than median sale price, which shifts with the mix of homes sold.',
+    usedIn: ['tier1-assets'],
+  },
+  CAP_RATE_INTERNAL: {
+    label: 'Residential Cap Rate (Internal Derivation)',
+    fredId: null,
+    url: '/methodology',
+    description:
+      'Derived as (median monthly rent × 12) ÷ median home price from series already on this site: 5.1% (1971) → 3.8% (2026). Gross yield — before taxes, maintenance, vacancy. Actual net cap rates run lower.',
+    usedIn: ['tier1-assets'],
+  },
+  RETIREMENT_CALC: {
+    label: 'Respectable Retirement Threshold (Internal)',
+    fredId: null,
+    url: '/methodology',
+    description:
+      '$60K/yr spending (2026 dollars, CPI-deflated for history) × 25 per the 4% withdrawal rule = $1.5M portfolio target, expressed in hours of median labor. No institution publishes this series.',
+    usedIn: ['tier1-assets'],
+  },
+  METALS_SPOT_2026: {
+    label: 'Metals Spot Prices (June 2026 refresh)',
+    fredId: null,
+    url: 'https://fortune.com/article/current-price-of-silver-6-10-2026/',
+    description:
+      'Gold $4,083/oz (June 11, 2026, 9am ET) and silver $64.29/oz (June 10, 2026, 9am ET). Static values with as-of date — both metals are highly volatile in mid-2026 (silver ranged $36→$80 over the trailing year).',
+    usedIn: ['tier1-assets', 'gold-analysis', 'table'],
+  },
+
   // ── Added: gold purchasing-power analysis sources ──
   USAGOLD_HIST: {
     label: 'USAGOLD Historical Gold Prices',
     fredId: null,
     url: 'https://www.usagold.com/daily-gold-price-history/',
     description:
-      'Historical annual gold prices. 1980 uses year-average (~$615), not the Jan 1980 spike (~$850). 2026 = May 28 spot ($4,501).',
+      'Historical annual gold prices. 1980 uses year-average (~$615), not the Jan 1980 spike (~$850). 2026 = June 11 spot ($4,083).',
     usedIn: ['gold-analysis'],
   },
   BLS_WEEKLY_EARNINGS: {

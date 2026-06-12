@@ -16,12 +16,12 @@ const sp500Idx = sp500.map((v) => +((v / sp500[0]) * 100).toFixed(1))
 const goldIdx = gold.map((v) => +((v / gold[0]) * 100).toFixed(1))
 
 const kpis = [
-  { lbl: 'Gold (May 2026)', val: '$4,501', sub: 'per troy oz', chg: '+35.7% vs. 1 yr ago', cls: 'up' },
+  { lbl: 'Gold (Jun 11, 2026)', val: '$4,083', sub: 'per troy oz, spot', chg: '−9.3% vs. May 28 spot', cls: 'dn' },
   { lbl: 'Median Weekly Wage', val: '$1,235', sub: 'Q1 2026 (BLS)', chg: '+3.4% YoY', cls: 'dn' },
   { lbl: 'Median Home Price', val: '$403,200', sub: 'Q1 2026 (Census)', chg: '−4.7% vs. Q1 2025', cls: 'up' },
-  { lbl: 'Hours to Buy 1 oz Gold', val: '146 hrs', sub: 'vs. 12 hrs in 1970', chg: '12× harder', cls: 'up' },
-  { lbl: 'Home Cost in Gold', val: '90 oz', sub: 'vs. 639 oz in 1970', chg: '86% cheaper in gold', cls: 'dn' },
-  { lbl: 'Annual Salary in Gold', val: '14.3 oz', sub: 'vs. 172 oz in 1970', chg: '92% collapse', cls: 'up' },
+  { lbl: 'Hours to Buy 1 oz Gold', val: '132 hrs', sub: 'vs. 12 hrs in 1970', chg: '11× harder', cls: 'up' },
+  { lbl: 'Home Cost in Gold', val: '99 oz', sub: 'vs. 639 oz in 1970', chg: '85% cheaper in gold', cls: 'dn' },
+  { lbl: 'Annual Salary in Gold', val: '15.7 oz', sub: 'vs. 172 oz in 1970', chg: '91% collapse', cls: 'up' },
 ]
 
 const hoursCellColors = hrsForGold.map((h) => (h > 100 ? C.red : h > 50 ? '#fbbf24' : C.green))
@@ -52,7 +52,7 @@ export default function GoldAnalysisTab() {
       <div className="grid-2">
         <ChartCard title="Hours of Median Work to Buy 1 Troy Oz of Gold"
           sub="Gold spot price ÷ median hourly wage — higher bar = less purchasing power" tall
-          sources={['USAGOLD_HIST', 'BLS_WEEKLY_EARNINGS']}>
+          sources={['USAGOLD_HIST', 'BLS_WEEKLY_EARNINGS', 'METALS_SPOT_2026']}>
           <TerminalChart rows={toRows(years, { hrs: hrsForGold })} height={320} legend={false} series={[
             { key: 'hrs', label: 'Hours per 1 oz gold', color: C.gold, kind: 'bar', cellColors: hoursCellColors },
           ]} />
@@ -95,8 +95,8 @@ export default function GoldAnalysisTab() {
       <div className="fc">
         <h4>🔑 Key Insight</h4>
         <p>
-          In 1970 a median worker needed <strong>~12 hours</strong> to afford 1 oz of gold. By Q1 2026 that
-          figure is <strong>~146 hours</strong> — a 12× deterioration in gold-denominated purchasing power.
+          In 1970 a median worker needed <strong>~12 hours</strong> to afford 1 oz of gold. By June 2026 that
+          figure is <strong>~132 hours</strong> — an 11× deterioration in gold-denominated purchasing power.
           The biggest jumps occurred during 1978–80 (inflation + gold surge) and 2020–26 (monetary expansion
           + commodity rally).
         </p>
@@ -104,8 +104,8 @@ export default function GoldAnalysisTab() {
       <div className="fc bear">
         <h4>⚖️ The Contrarian View — Both Sides of the Coin</h4>
         <p>
-          A median US home cost <strong>639 oz of gold in 1970</strong> and costs only <strong>~90 oz
-          today</strong> — in gold terms, housing got 86% <em>cheaper</em>. The problem isn't that housing got
+          A median US home cost <strong>639 oz of gold in 1970</strong> and costs only <strong>~99 oz
+          today</strong> — in gold terms, housing got 85% <em>cheaper</em>. The problem isn't that housing got
           expensive; it's that <em>the dollar got cheap</em>. And gold cuts both ways: in 2000 a median salary
           bought 118 oz — nearly as good as 1970 — because gold was depressed. The real affordability crisis
           is a <strong>wage-to-gold</strong> problem, not a housing-to-gold problem.
@@ -114,7 +114,7 @@ export default function GoldAnalysisTab() {
       <div className="fc info">
         <h4>📈 The Real vs. Nominal Tension</h4>
         <p>
-          The S&P 500 rose ~8,000% since 1970 (price only); gold ~12,400%. With dividends reinvested,
+          The S&P 500 rose ~8,000% since 1970 (price only); gold ~11,200%. With dividends reinvested,
           equities would substantially outperform gold. But gold's outperformance since 2000 reflects
           declining confidence in fiat currency — and a CAPE near ~35× suggests equities may be pricing in
           continued dollar depreciation, making gold's strength partly self-confirming.
@@ -150,7 +150,7 @@ export default function GoldAnalysisTab() {
           </table>
         </div>
         <p style={{ fontSize: '0.72rem', marginTop: 8 }}>
-          * 2026: Gold = May 28 spot; Wage = Q1 2026 BLS; Home = Q1 2026 Census; S&P = May 26 close. Wages
+          * 2026: Gold = June 11 spot ($4,083); Wage = Q1 2026 BLS; Home = Q1 2026 Census; S&P = May 26 close. Wages
           pre-2000 use Census/CPS median family income proxies. Gold 1980 uses year-average (~$615), not the
           Jan 1980 spike (~$850).
         </p>
