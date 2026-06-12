@@ -1,14 +1,14 @@
 import { useWage } from '../context/WageContext'
-import { YR_LABELS } from '../data/staticSeries'
+import { YEARS } from '../data/staticSeries'
 import { TerminalChart, ChartCard, C, toRows } from './charts/primitives'
 
 export default function Tier2NecessitiesTab() {
   const { hoursArr, minsArr } = useWage()
 
-  const tuitionRows = toRows(YR_LABELS, { tuition: hoursArr('tuition') })
-  const healthRows = toRows(YR_LABELS, { health: hoursArr('health') })
-  const foodRows = toRows(YR_LABELS, { eggs: minsArr('eggs'), beef: minsArr('beef') })
-  const gasRentRows = toRows(YR_LABELS, { gas: minsArr('gas'), rent: hoursArr('rent') })
+  const tuitionRows = toRows(YEARS, { tuition: hoursArr('tuition') })
+  const healthRows = toRows(YEARS, { health: hoursArr('health') })
+  const foodRows = toRows(YEARS, { eggs: minsArr('eggs'), beef: minsArr('beef') })
+  const gasRentRows = toRows(YEARS, { gas: minsArr('gas'), rent: hoursArr('rent') })
 
   return (
     <>

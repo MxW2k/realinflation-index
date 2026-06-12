@@ -39,14 +39,28 @@ const fmt = (v) =>
 export function TerminalChart({
   rows, series, height = 250,
   leftLabel, leftLabelColor, rightLabel, rightLabelColor,
-  legend = true,
+  legend = true, xTicks,
 }) {
   const hasRight = series.some((s) => s.axis === 'right')
+  // Numeric x values → time-proportional axis: 1971→1980 spans 9× the
+  // width of 2025→2026, instead of every label getting an equal slot.
+  const numericX = typeof rows[0]?.x === 'number'
+  const ticks = numericX ? (xTicks ?? rows.map((r) => r.x)) : undefined
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <ComposedChart data={rows} margin={{ top: 6, right: 8, left: 0, bottom: 0 }}>
+      <ComposedChart data={rows} margin={{ top: 6, right: 14, left: 0, bottom: 0 }}>
         <CartesianGrid stroke={GRID} vertical={false} />
-        <XAxis dataKey="x" tick={TICK} stroke={AXIS} tickLine={false} />
+        <XAxis
+          dataKey="x" tick={TICK} stroke={AXIS} tickLine={false}
+          {...(numericX && {
+            type: 'number',
+            scale: 'linear',
+            domain: ['dataMin', 'dataMax'],
+            ticks,
+            allowDecimals: false,
+            tickFormatter: (v) => String(v),
+          })}
+        />
         <YAxis
           yAxisId="left" tick={TICK} stroke={AXIS} tickLine={false} width={52}
           tickFormatter={fmt}
@@ -72,7 +86,8 @@ export function TerminalChart({
           if (s.kind === 'bar') {
             return (
               <Bar key={s.key} yAxisId={axis} dataKey={s.key} name={s.label}
-                fill={s.color + '88'} stroke={s.color} strokeWidth={1} radius={[3, 3, 0, 0]}>
+                fill={s.color + '88'} stroke={s.color} strokeWidth={1} radius={[3, 3, 0, 0]}
+                barSize={numericX ? 9 : undefined}>
                 {s.cellColors && rows.map((_, i) => <Cell key={i} fill={s.cellColors[i] + '88'} stroke={s.cellColors[i]} />)}
               </Bar>
             )
@@ -81,14 +96,14 @@ export function TerminalChart({
             return (
               <Area key={s.key} yAxisId={axis} type="monotone" dataKey={s.key} name={s.label}
                 stroke={s.color} strokeWidth={s.width ?? 2} fill={s.color + '18'}
-                dot={{ r: s.dot ?? 3, fill: s.color, strokeWidth: 0 }} activeDot={{ r: 5 }} />
+                dot={s.dot === 0 ? false : { r: s.dot ?? 3, fill: s.color, strokeWidth: 0 }} activeDot={{ r: 5 }} />
             )
           }
           return (
             <Line key={s.key} yAxisId={axis} type="monotone" dataKey={s.key} name={s.label}
               stroke={s.color} strokeWidth={s.width ?? 2}
               strokeDasharray={s.dashed ? '5 4' : undefined}
-              dot={{ r: s.dot ?? 3, fill: s.color, strokeWidth: 0 }} activeDot={{ r: 5 }} />
+              dot={s.dot === 0 ? false : { r: s.dot ?? 3, fill: s.color, strokeWidth: 0 }} activeDot={{ r: 5 }} />
           )
         })}
       </ComposedChart>

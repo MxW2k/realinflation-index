@@ -1,6 +1,6 @@
 import { useWage } from '../context/WageContext'
 import {
-  PRICES, YR_LABELS, AS_OF, DIV_YIELD, GS10, CASE_SHILLER,
+  PRICES, YEARS, YR_LABELS, AS_OF, DIV_YIELD, GS10, CASE_SHILLER,
   capRateFor, passiveIncomeHours, retirementHours,
 } from '../data/staticSeries'
 import { TerminalChart, ChartCard, C, toRows } from './charts/primitives'
@@ -81,7 +81,7 @@ function SecuritySection() {
         sub="By vehicle — the dividend-yield collapse (3.10% → 1.06%) tripled the real capital required" tall
         sources={['DIV_YIELD', 'GS10_YIELD', 'CAP_RATE_INTERNAL', 'AHETPI']}
       >
-        <TerminalChart rows={toRows(YR_LABELS, { div, bond, rental })} height={320} series={[
+        <TerminalChart rows={toRows(YEARS, { div, bond, rental })} height={320} series={[
           { key: 'div', label: 'S&P dividend income', color: C.gold },
           { key: 'bond', label: '10-yr Treasury ladder', color: C.blue },
           { key: 'rental', label: 'Rental property (gross cap rate)', color: C.teal },
@@ -115,7 +115,7 @@ function SecuritySection() {
 function GenerationalSection() {
   const { wages } = useWage()
   // Case-Shiller starts 1987 → index both CS and wages to 1990 = 100
-  const labels = YR_LABELS.slice(2)
+  const labels = YEARS.slice(2)
   const cs = CASE_SHILLER.slice(2).map((v) => Math.round((v / CASE_SHILLER[2]) * 100))
   const wageIdx = wages.slice(2).map((v) => Math.round((v / wages[2]) * 100))
 
@@ -217,7 +217,7 @@ function StatusSection() {
           sub="$1.5M-equivalent portfolio target (CPI-adjusted), ÷ wage. Current datapoint at your wage anchor."
           tall sources={['RETIREMENT_CALC', 'AHETPI']}
         >
-          <TerminalChart rows={toRows(YR_LABELS, { retire })} height={320} legend={false} series={[
+          <TerminalChart rows={toRows(YEARS, { retire })} height={320} legend={false} series={[
             { key: 'retire', label: 'Hours to retirement target', color: C.orange, kind: 'area' },
           ]} />
         </ChartCard>
@@ -245,10 +245,10 @@ function StatusSection() {
 export default function Tier1AssetsTab() {
   const { hoursArr } = useWage()
 
-  const homeRows = toRows(YR_LABELS, { home: hoursArr('home') })
-  const farmRows = toRows(YR_LABELS, { farm: hoursArr('farm') })
-  const spRows = toRows(YR_LABELS, { sp: hoursArr('sp500') })
-  const metalRows = toRows(YR_LABELS, { gold: hoursArr('gold'), silver: hoursArr('silver') })
+  const homeRows = toRows(YEARS, { home: hoursArr('home') })
+  const farmRows = toRows(YEARS, { farm: hoursArr('farm') })
+  const spRows = toRows(YEARS, { sp: hoursArr('sp500') })
+  const metalRows = toRows(YEARS, { gold: hoursArr('gold'), silver: hoursArr('silver') })
 
   return (
     <>

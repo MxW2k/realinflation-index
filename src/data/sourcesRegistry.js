@@ -111,7 +111,7 @@ export const sources = {
     url: 'https://www.kff.org/health-costs/report/employer-health-benefits-survey/',
     description:
       'Annual survey of employer-sponsored insurance. MHIM uses total family premium — the actual cost of coverage. 2025: $26,993 family average. CPI instead uses a retained earnings proxy that produced inverted signals during COVID.',
-    usedIn: ['mhim-cpi', 'tier2-necessities', 'table'],
+    usedIn: ['overview', 'mhim-cpi', 'tier2-necessities', 'table'],
   },
   CPI_HEALTH_METHOD: {
     label: 'BLS CPI Health Insurance Methodology',
@@ -119,7 +119,7 @@ export const sources = {
     url: 'https://www.bls.gov/cpi/additional-resources/improvements-cpi-health-insurance-index.htm',
     description:
       'BLS retained earnings method — tracks insurer margin, not premium. Produced inverted inflation signals during COVID. BLS-acknowledged limitation.',
-    usedIn: ['cpi-methodology', 'tier2-necessities'],
+    usedIn: ['overview', 'cpi-methodology', 'tier2-necessities'],
   },
   MHIM_METHODOLOGY: {
     label: 'MHIM Methodology (Internal)',
@@ -127,7 +127,7 @@ export const sources = {
     url: '/methodology',
     description:
       'MHIM weights: 40% assets (home equity + equities + gold + farmland), 45% necessities (KFF premiums, tuition, food, gasoline, rent), 15% discretionary. Asset weighting reflects cost-to-enter the wealth-building economy.',
-    usedIn: ['mhim-cpi'],
+    usedIn: ['overview', 'mhim-cpi'],
   },
 
   // ── Added: hours-of-labor series used on the live site ──

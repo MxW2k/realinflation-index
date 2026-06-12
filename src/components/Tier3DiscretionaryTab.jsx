@@ -1,12 +1,12 @@
 import { useWage } from '../context/WageContext'
-import { YR_LABELS } from '../data/staticSeries'
+import { YEARS } from '../data/staticSeries'
 import { TerminalChart, ChartCard, C, toRows } from './charts/primitives'
 
 export default function Tier3DiscretionaryTab() {
   const { hoursArr } = useWage()
 
-  const carRows = toRows(YR_LABELS, { car: hoursArr('car') })
-  const elecRows = toRows(YR_LABELS, { elec: hoursArr('elec') })
+  const carRows = toRows(YEARS, { car: hoursArr('car') })
+  const elecRows = toRows(YEARS, { elec: hoursArr('elec') })
 
   return (
     <>

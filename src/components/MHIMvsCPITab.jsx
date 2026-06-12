@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { YR_LABELS, COMPOSITE, DIVERGENCE } from '../data/staticSeries'
+import { YEARS, COMPOSITE, DIVERGENCE } from '../data/staticSeries'
 import { TerminalChart, ChartCard, C, toRows } from './charts/primitives'
+import WageTimeMachine from './WageTimeMachine'
 
 export default function MHIMvsCPITab() {
   const [mode, setMode] = useState('dollar') // 'dollar' | 'hours'
@@ -8,10 +9,10 @@ export default function MHIMvsCPITab() {
   const d = isDollar ? COMPOSITE.dollar : COMPOSITE.hours
   const mhimColor = isDollar ? C.gold : C.teal
 
-  const compositeRows = toRows(YR_LABELS, {
+  const compositeRows = toRows(YEARS, {
     mhim: d.MHIM, cpi: d.CPI, t1: d.T1, t2: d.T2, t3: d.T3,
   })
-  const divergenceRows = toRows(YR_LABELS, {
+  const divergenceRows = toRows(YEARS, {
     wage: DIVERGENCE.WAGE_IDX, home: DIVERGENCE.HOME_NOM,
     gold: DIVERGENCE.GOLD_NOM, sp: DIVERGENCE.SP_NOM,
   })
@@ -83,6 +84,8 @@ export default function MHIMvsCPITab() {
           { key: 't3', label: 'Tier 3: Discretionary', color: isDollar ? C.green : C.blue, dashed: true, width: 1.2, dot: 2 },
         ]} />
       </ChartCard>
+
+      <WageTimeMachine />
 
       <ChartCard
         title="Nominal Wage vs. Asset Prices — Divergence (1971 = 100)"

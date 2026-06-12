@@ -101,6 +101,20 @@ export const GOLD_PAGE = {
 
 // ── Helpers ──
 
+// Log-linear interpolation of an anchor-year series to ANY year 1971-2026.
+// Between anchors, values follow a constant compound growth rate.
+export const interpSeries = (series, year) => {
+  const y = Math.min(Math.max(year, YEARS[0]), YEARS[YEARS.length - 1])
+  let i = 0
+  while (i < YEARS.length - 2 && YEARS[i + 1] <= y) i++
+  if (YEARS[i] === y) return series[i]
+  if (YEARS[i + 1] === y) return series[i + 1]
+  const [y0, y1, v0, v1] = [YEARS[i], YEARS[i + 1], series[i], series[i + 1]]
+  if (v0 == null || v1 == null) return null
+  const t = (y - y0) / (y1 - y0)
+  return v0 * Math.pow(v1 / v0, t)
+}
+
 // Index an array to first value = 100
 export const idx = (arr) => arr.map((v) => Math.round((v / arr[0]) * 100))
 
