@@ -34,7 +34,7 @@ header p{color:var(--muted);font-size:0.78rem;margin-top:2px;}
 #wage-bar .wb-note{font-size:0.72rem;color:var(--muted);}
 
 /* NAV */
-nav{background:var(--panel);border-bottom:1px solid var(--border);padding:0 16px;display:flex;overflow-x:auto;}
+nav{background:var(--panel);border-bottom:1px solid var(--border);padding:0 16px;display:flex;overflow-x:auto;position:sticky;top:0;z-index:50;}
 nav button{background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);cursor:pointer;font-size:0.82rem;padding:11px 14px;white-space:nowrap;transition:color 0.15s,border-color 0.15s;}
 nav button:hover{color:var(--text);}
 nav button.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:600;}

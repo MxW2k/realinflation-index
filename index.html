@@ -1,12 +1,658 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Matt's Honest Inflation Index</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matt's Honest Inflation Index</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+/* ── Landing page: scoped to #lp so React vars stay clean ── */
+html { scroll-behavior: smooth; }
+body { overflow-x: hidden; }
+
+#back-btn {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  z-index: 300;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 40px;
+  padding: 10px 20px;
+  color: #8b949e;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity 0.35s, transform 0.35s, color 0.2s, border-color 0.2s;
+  letter-spacing: 0.02em;
+}
+#back-btn.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+#back-btn:hover { color: #d4a843; border-color: #d4a843; }
+
+/* ── All landing vars scoped to #lp ── */
+#lp {
+  --lp-bg:       #0a0f1a;
+  --lp-bg2:      #0d1420;
+  --lp-card:     #111827;
+  --lp-border:   #1e2d45;
+  --lp-border2:  #253553;
+  --lp-gold:     #d4a843;
+  --lp-gold-dim: rgba(212,168,67,0.12);
+  --lp-teal:     #2dd4bf;
+  --lp-red:      #f85149;
+  --lp-orange:   #f0883e;
+  --lp-green:    #3fb950;
+  --lp-muted:    #8b949e;
+  --lp-text:     #e6edf3;
+  --lp-text-dim: #8b949e;
+  --lp-sans:     'Inter', system-ui, sans-serif;
+  --lp-mono:     'IBM Plex Mono', monospace;
+  background: var(--lp-bg);
+  color: var(--lp-text);
+  font-family: var(--lp-sans);
+  line-height: 1.6;
+}
+#lp section { position: relative; }
+#lp .inner { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+#lp .lbl {
+  font-family: var(--lp-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lp-gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+#lp .lbl::before { content:''; display:inline-block; width:20px; height:1px; background:var(--lp-gold); flex-shrink:0; }
+#lp .lbl.center { justify-content: center; }
+#lp .reveal { opacity:0; transform:translateY(36px); transition:opacity 0.75s cubic-bezier(0.22,1,0.36,1), transform 0.75s cubic-bezier(0.22,1,0.36,1); }
+#lp .reveal.in { opacity:1; transform:translateY(0); }
+
+/* HERO */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; overflow: hidden;
+  background: var(--lp-bg);
+}
+#hero::before {
+  content:''; position:absolute; inset:0;
+  background-image: linear-gradient(rgba(212,168,67,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(212,168,67,0.055) 1px, transparent 1px);
+  background-size: 64px 64px; pointer-events:none;
+}
+#hero::after {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse 80% 55% at 50% 38%, rgba(212,168,67,0.09) 0%, rgba(10,15,26,0) 60%, var(--lp-bg) 100%);
+  pointer-events:none;
+}
+.hero-inner { position:relative; z-index:1; max-width:880px; margin:0 auto; padding:48px 24px; }
+.hero-eye { font-family:var(--lp-mono); font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--lp-gold); margin-bottom:28px; opacity:0; }
+.hero-title { font-size:clamp(2.6rem,7vw,5.2rem); font-weight:900; line-height:1.06; color:var(--lp-text); margin-bottom:24px; letter-spacing:-0.02em; opacity:0; }
+.hero-title em { font-style:normal; color:var(--lp-gold); }
+.hero-sub { font-size:clamp(1rem,2vw,1.2rem); color:var(--lp-text-dim); max-width:520px; margin:0 auto 52px; font-weight:300; line-height:1.75; opacity:0; }
+.hero-ctrs { display:flex; align-items:center; justify-content:center; gap:40px; flex-wrap:wrap; margin-bottom:56px; opacity:0; }
+.ctr-block { text-align:center; }
+.ctr-lbl { font-family:var(--lp-mono); font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--lp-text-dim); margin-bottom:8px; }
+.ctr-val { font-family:var(--lp-mono); font-size:clamp(2.2rem,5.5vw,3.8rem); font-weight:600; line-height:1; letter-spacing:-0.02em; }
+.ctr-val.gold { color:var(--lp-gold); }
+.ctr-val.dim  { color:var(--lp-text-dim); }
+.ctr-sep { width:1px; height:64px; background:var(--lp-border2); align-self:center; }
+.hero-scroll { display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--lp-text-dim); font-size:0.72rem; letter-spacing:0.1em; opacity:0; animation:lp-bounce 2.2s ease-in-out infinite; }
+@keyframes lp-bounce { 0%,100%{transform:translateY(0)} 55%{transform:translateY(7px)} }
+
+/* TICKER */
+#lp-ticker { background:var(--lp-card); border-top:1px solid var(--lp-border); border-bottom:1px solid var(--lp-border); padding:12px 0; overflow:hidden; white-space:nowrap; }
+.tk-track { display:inline-flex; animation:lp-ticker 32s linear infinite; }
+.tk-track:hover { animation-play-state:paused; }
+.tk { font-family:var(--lp-mono); font-size:0.72rem; letter-spacing:0.06em; padding:0 24px; color:var(--lp-text-dim); }
+.tk span { color:var(--lp-gold); font-weight:600; }
+.tk-dot { color:var(--lp-border2); }
+@keyframes lp-ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* STORY */
+#lp-story { padding:110px 0; background:var(--lp-bg); }
+.story-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+@media(max-width:800px){.story-grid{grid-template-columns:1fr; gap:40px;}}
+.story-text h2 { font-size:clamp(1.9rem,3.8vw,2.8rem); font-weight:900; line-height:1.12; letter-spacing:-0.02em; margin-bottom:18px; color:var(--lp-text); }
+.story-text p { font-size:0.98rem; color:var(--lp-text-dim); line-height:1.8; margin-bottom:20px; }
+.lp-pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+.lp-pill { display:inline-flex; align-items:center; gap:7px; background:var(--lp-card); border:1px solid var(--lp-border); border-radius:6px; padding:7px 13px; font-family:var(--lp-mono); font-size:0.75rem; color:var(--lp-text-dim); }
+.lp-pill .ok { color:var(--lp-green); }
+.lp-pill .nt { color:var(--lp-muted); }
+.lp-chart-card { background:var(--lp-card); border:1px solid var(--lp-border); border-radius:14px; padding:22px; }
+.lp-chart-title { font-family:var(--lp-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.09em; color:var(--lp-text-dim); margin-bottom:14px; }
+
+/* CATCH */
+#lp-catch { padding:90px 0; background:var(--lp-bg2); }
+.catch-box { max-width:640px; margin:0 auto; text-align:center; }
+.catch-box h2 { font-size:clamp(1.9rem,3.8vw,2.8rem); font-weight:900; line-height:1.12; letter-spacing:-0.02em; margin-bottom:22px; color:var(--lp-text); }
+.catch-box h2 em { font-style:normal; color:var(--lp-gold); }
+.catch-box p { font-size:1rem; color:var(--lp-text-dim); line-height:1.85; margin-bottom:18px; }
+.catch-quote { margin:32px 0; padding:22px 28px; border-left:3px solid var(--lp-gold); background:var(--lp-gold-dim); border-radius:0 10px 10px 0; text-align:left; font-size:1.05rem; font-weight:500; color:var(--lp-text); line-height:1.65; }
+
+/* DIVERGENCE */
+#lp-div { padding:100px 0; background:var(--lp-bg); }
+.div-head { text-align:center; margin-bottom:60px; }
+.div-head h2 { font-size:clamp(1.9rem,3.8vw,2.8rem); font-weight:900; letter-spacing:-0.02em; margin-bottom:12px; line-height:1.1; color:var(--lp-text); }
+.div-head p { font-size:0.95rem; color:var(--lp-text-dim); max-width:480px; margin:0 auto; }
+.div-grid { display:grid; grid-template-columns:1fr auto 1fr; gap:0 48px; align-items:start; }
+@media(max-width:800px){.div-grid{grid-template-columns:1fr; gap:40px;} .div-vsep{display:none;}}
+.div-vsep { width:1px; background:var(--lp-border); align-self:stretch; margin-top:48px; }
+.div-col h3 { font-family:var(--lp-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--lp-border); }
+.div-col.col-good h3 { color:var(--lp-green); border-color:rgba(63,185,80,0.25); }
+.div-col.col-bad  h3 { color:var(--lp-red); border-color:rgba(248,81,73,0.25); }
+.div-item { display:flex; justify-content:space-between; align-items:center; padding:13px 0; border-bottom:1px solid rgba(255,255,255,0.04); gap:12px; }
+.di-name { font-size:0.88rem; color:var(--lp-text-dim); }
+.di-r { display:flex; align-items:center; gap:8px; text-align:right; }
+.di-v { font-family:var(--lp-mono); font-size:0.88rem; font-weight:600; white-space:nowrap; }
+.di-v.gn  { color:var(--lp-green); }
+.di-v.rd  { color:var(--lp-red); }
+.di-v.gld { color:var(--lp-gold); }
+.di-badge { font-family:var(--lp-mono); font-size:0.62rem; padding:2px 7px; border-radius:4px; white-space:nowrap; }
+.di-badge.dn { background:rgba(63,185,80,0.1);  color:var(--lp-green); }
+.di-badge.up { background:rgba(248,81,73,0.12); color:var(--lp-red); }
+.div-good-note { margin-top:20px; font-size:0.8rem; color:var(--lp-green); background:rgba(63,185,80,0.07); border:1px solid rgba(63,185,80,0.18); border-radius:8px; padding:12px 14px; line-height:1.6; }
+
+/* TIERS */
+#lp-tiers { padding:100px 0; background:var(--lp-bg2); }
+.tiers-head { text-align:center; margin-bottom:56px; }
+.tiers-head h2 { font-size:clamp(1.9rem,3.8vw,2.8rem); font-weight:900; letter-spacing:-0.02em; margin-bottom:12px; color:var(--lp-text); }
+.tiers-head p { font-size:0.95rem; color:var(--lp-text-dim); max-width:460px; margin:0 auto; }
+.tier-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+@media(max-width:900px){.tier-grid{grid-template-columns:1fr;}}
+.tier-card { background:var(--lp-card); border:1px solid var(--lp-border); border-radius:16px; padding:28px 24px; position:relative; overflow:hidden; }
+.tier-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.tier-card.t1::before { background:linear-gradient(90deg,var(--lp-red) 0%,var(--lp-gold) 100%); }
+.tier-card.t2::before { background:var(--lp-orange); }
+.tier-card.t3::before { background:var(--lp-green); }
+.tc-num { font-family:var(--lp-mono); font-size:0.65rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--lp-muted); margin-bottom:8px; }
+.tc-name { font-size:1.25rem; font-weight:800; margin-bottom:6px; color:var(--lp-text); }
+.tc-sub { font-size:0.82rem; color:var(--lp-text-dim); line-height:1.55; margin-bottom:22px; min-height:52px; }
+.tc-big { font-family:var(--lp-mono); font-weight:600; line-height:1; margin-bottom:3px; font-size:1.9rem; }
+.t1 .tc-big { color:var(--lp-red); } .t2 .tc-big { color:var(--lp-orange); } .t3 .tc-big { color:var(--lp-green); }
+.tc-big-sub { font-size:0.75rem; color:var(--lp-text-dim); margin-bottom:20px; }
+.tc-items { border-top:1px solid var(--lp-border); padding-top:16px; display:flex; flex-direction:column; }
+.tci { display:flex; justify-content:space-between; font-size:0.78rem; padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--lp-text-dim); }
+.tci strong { font-family:var(--lp-mono); font-size:0.75rem; color:var(--lp-text); font-weight:600; }
+.tc-note { margin-top:14px; font-size:0.76rem; color:var(--lp-green); background:rgba(63,185,80,0.07); border:1px solid rgba(63,185,80,0.18); border-radius:8px; padding:9px 12px; line-height:1.5; }
+
+/* WAGE MACHINE */
+#lp-wage { padding:100px 0; background:var(--lp-bg); }
+.wm-head { text-align:center; margin-bottom:48px; }
+.wm-head h2 { font-size:clamp(1.9rem,3.8vw,2.8rem); font-weight:900; letter-spacing:-0.02em; margin-bottom:12px; color:var(--lp-text); }
+.wm-head p { font-size:0.95rem; color:var(--lp-text-dim); max-width:540px; margin:0 auto; }
+.wm-form { background:var(--lp-card); border:1px solid var(--lp-border); border-radius:14px; padding:28px; margin-bottom:20px; display:flex; flex-wrap:wrap; gap:18px; align-items:flex-end; }
+.wm-field { display:flex; flex-direction:column; gap:6px; flex:1; min-width:130px; }
+.wm-field label { font-family:var(--lp-mono); font-size:0.65rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--lp-text-dim); }
+.wm-field input { background:var(--lp-bg); border:1px solid var(--lp-border); border-radius:8px; padding:9px 13px; color:var(--lp-text); font-family:var(--lp-mono); font-size:0.92rem; outline:none; transition:border-color 0.2s; width:100%; }
+.wm-field input:focus { border-color:var(--lp-gold); }
+.wm-modes { display:flex; gap:6px; }
+.wm-mode { flex:1; padding:9px 0; border-radius:7px; border:1px solid var(--lp-border); background:transparent; color:var(--lp-text-dim); font-family:var(--lp-sans); font-size:0.78rem; font-weight:500; cursor:pointer; transition:all 0.2s; text-align:center; }
+.wm-mode.on { background:rgba(212,168,67,0.14); border-color:var(--lp-gold); color:var(--lp-gold); }
+.wm-go { background:var(--lp-gold); color:#0a0f1a; border:none; border-radius:8px; padding:10px 28px; font-family:var(--lp-sans); font-weight:700; font-size:0.88rem; cursor:pointer; transition:background 0.2s; white-space:nowrap; flex-shrink:0; }
+.wm-go:hover { opacity:0.88; }
+.wm-results { display:none; }
+.wm-results.show { display:block; }
+.wm-kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:18px; }
+@media(max-width:700px){.wm-kpis{grid-template-columns:1fr;}}
+.wm-kpi { background:var(--lp-card); border:1px solid var(--lp-border); border-radius:12px; padding:18px 20px; }
+.wk-l { font-size:0.76rem; color:var(--lp-text-dim); margin-bottom:6px; }
+.wk-v { font-family:var(--lp-mono); font-size:1.5rem; font-weight:600; line-height:1; margin-bottom:4px; }
+.wk-v.gold { color:var(--lp-gold); } .wk-v.teal { color:var(--lp-teal); } .wk-v.dim { color:var(--lp-text-dim); }
+.wk-s { font-size:0.73rem; color:var(--lp-text-dim); }
+.wm-chart-wrap { background:var(--lp-card); border:1px solid var(--lp-border); border-radius:12px; padding:20px; margin-bottom:14px; }
+.wm-chart-ttl { font-family:var(--lp-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--lp-text-dim); margin-bottom:12px; }
+.wm-note { background:rgba(212,168,67,0.06); border:1px solid rgba(212,168,67,0.2); border-radius:12px; padding:16px 20px; font-size:0.81rem; color:var(--lp-text-dim); line-height:1.65; }
+.wm-note strong { color:var(--lp-gold); }
+
+/* MHIM REVEAL */
+#lp-reveal { padding:120px 0; text-align:center; background:var(--lp-bg2); overflow:hidden; }
+.rv-box { max-width:760px; margin:0 auto; padding:0 32px; }
+.rv-big { font-family:var(--lp-mono); font-size:clamp(4rem,11vw,7.5rem); font-weight:600; color:var(--lp-gold); line-height:1; letter-spacing:-0.03em; margin-bottom:6px; }
+.rv-big-sub { font-family:var(--lp-mono); font-size:0.76rem; color:var(--lp-text-dim); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:44px; }
+.rv-text { font-size:clamp(1.1rem,2.5vw,1.45rem); font-weight:300; line-height:1.7; color:var(--lp-text); margin-bottom:16px; }
+.rv-text em { font-style:normal; color:var(--lp-gold); font-weight:600; }
+.rv-sub { font-size:0.97rem; color:var(--lp-text-dim); max-width:580px; margin:0 auto 48px; line-height:1.85; }
+.rv-method { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:0 0 28px; text-align:left; }
+@media(max-width:640px){.rv-method{grid-template-columns:1fr;}}
+.rv-card { background:var(--lp-card); border:1px solid var(--lp-border); border-radius:12px; padding:20px; }
+.rv-card-ttl { font-family:var(--lp-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.09em; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--lp-border); }
+.rv-card-ttl.cpi  { color:var(--lp-muted); }
+.rv-card-ttl.mhim { color:var(--lp-gold); }
+.rv-row { font-size:0.8rem; color:var(--lp-text-dim); padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.04); line-height:1.5; }
+.rv-row:last-child { border-bottom:none; }
+.rv-row strong { color:var(--lp-text); }
+.rv-steelman { background:rgba(248,81,73,0.06); border:1px solid rgba(248,81,73,0.2); border-radius:12px; padding:18px 22px; text-align:left; margin-bottom:44px; }
+.rv-steelman h4 { font-size:0.8rem; color:var(--lp-red); font-weight:700; margin-bottom:8px; }
+.rv-steelman p { font-size:0.81rem; color:var(--lp-text-dim); line-height:1.65; }
+.rv-cue { display:flex; flex-direction:column; align-items:center; gap:10px; color:var(--lp-text-dim); font-size:0.75rem; letter-spacing:0.08em; }
+.rv-cue-bar { width:2px; height:36px; background:var(--lp-gold); opacity:0.35; border-radius:2px; animation:lp-cue 1.6s ease-in-out infinite; }
+@keyframes lp-cue { 0%,100%{opacity:0.15;transform:scaleY(0.65)} 50%{opacity:0.65;transform:scaleY(1)} }
+
+/* TRANSITION to dashboard */
+#lp-transition {
+  background: var(--lp-bg);
+  border-top: 1px solid var(--lp-border);
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.lp-trans-dot { width:8px; height:8px; border-radius:50%; background:var(--lp-gold); flex-shrink:0; }
+.lp-trans-label { font-family:var(--lp-mono); font-size:0.75rem; color:var(--lp-gold); letter-spacing:0.08em; text-transform:uppercase; }
+.lp-trans-sub { font-size:0.78rem; color:var(--lp-text-dim); margin-left:8px; }
+  </style>
+</head>
+<body>
+
+<!-- ── Back to brief (fixed) ── -->
+<button id="back-btn" onclick="document.getElementById('hero').scrollIntoView({behavior:'smooth'})">↑ Back to brief</button>
+
+<!-- ══════════════════════════════════════════
+     LANDING PAGE SCROLL NARRATIVE
+══════════════════════════════════════════ -->
+<div id="lp">
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-eye">Matt's Honest Inflation Index</div>
+      <h1 class="hero-title">The government says<br>you're keeping up.<br><em>Your wallet disagrees.</em></h1>
+      <p class="hero-sub">CPI has been the official measure of inflation since 1971. Here's everything it captures — and everything it quietly leaves out.</p>
+      <div class="hero-ctrs">
+        <div class="ctr-block">
+          <div class="ctr-lbl">Official CPI (1971 = 100)</div>
+          <div class="ctr-val dim" id="c-cpi">100</div>
+        </div>
+        <div class="ctr-sep"></div>
+        <div class="ctr-block">
+          <div class="ctr-lbl">MHIM — wealth-building basket</div>
+          <div class="ctr-val gold" id="c-mhim">100</div>
+        </div>
+      </div>
+      <div class="hero-scroll"><span>scroll to see why</span><span>↓</span></div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div id="lp-ticker">
+    <div class="tk-track" id="tk-inner"></div>
+  </div>
+
+  <!-- THE OFFICIAL STORY -->
+  <section id="lp-story">
+    <div class="inner">
+      <div class="story-grid">
+        <div class="reveal">
+          <div class="lbl">The official story</div>
+          <h2 class="story-text">Everything went up.<br>Wages kept up.</h2>
+          <p class="story-text">The BLS has tracked consumer prices since 1919. Their CPI-U is the benchmark for Social Security COLAs, tax bracket indexing, and wage negotiations across the entire economy.</p>
+          <p class="story-text">And by this measure, the story is actually fine. Wages rose +877% since 1971. CPI rose +900%. You're almost exactly keeping pace with everything in the basket.</p>
+          <div class="lp-pills">
+            <div class="lp-pill"><span class="ok">✓</span> Eggs: 8.7 min → 3.8 min of work</div>
+            <div class="lp-pill"><span class="ok">✓</span> Gasoline: essentially flat in work hours</div>
+            <div class="lp-pill"><span class="ok">✓</span> Electronics: 90%+ cheaper in work hours</div>
+            <div class="lp-pill"><span class="nt">→</span> CPI +900% · Wages +877%</div>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay:0.14s">
+          <div class="lp-chart-card">
+            <div class="lp-chart-title">CPI vs. Median Wages — 1971 to 2026 (index 1971=100)</div>
+            <canvas id="story-chart" height="260"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE CATCH -->
+  <section id="lp-catch">
+    <div class="inner">
+      <div class="catch-box reveal">
+        <div class="lbl center">The problem</div>
+        <h2>CPI was never designed to track what you're trying to <em>build</em>.</h2>
+        <p>CPI measures the cost of consuming — groceries, gasoline, rent, appliances. It was never designed to track the cost of building a life you no longer have to work for.</p>
+        <div class="catch-quote">"By design, the CPI excludes every asset class entirely. Not as an oversight — it's the stated purpose. The flaw is using CPI to answer a question it was never asked."</div>
+        <p>A home. A retirement account. Equities. Gold. The inputs to generational wealth. None appear in CPI. Zero percent weight. By design.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIVERGENCE -->
+  <section id="lp-div">
+    <div class="inner">
+      <div class="div-head reveal">
+        <div class="lbl center">Two economies, one index</div>
+        <h2>One got cheaper.<br>One got out of reach.</h2>
+        <p>Hours of median work to purchase each item. 1971 vs. 2026 at median wage ($32.23/hr).</p>
+      </div>
+      <div class="div-grid">
+        <div class="div-col col-good">
+          <h3>▼ Consumer goods — CPI measures these</h3>
+          <div class="div-item reveal" style="transition-delay:0.04s"><span class="di-name">Dozen eggs</span><div class="di-r"><span class="di-v gn">3.8 min</span><span class="di-badge dn">↓ was 8.7</span></div></div>
+          <div class="div-item reveal" style="transition-delay:0.08s"><span class="di-name">Gallon of gasoline</span><div class="di-r"><span class="di-v gn">6.1 min</span><span class="di-badge dn">≈ was 5.9</span></div></div>
+          <div class="div-item reveal" style="transition-delay:0.12s"><span class="di-name">Ground beef (per lb)</span><div class="di-r"><span class="di-v gn">10.2 min</span><span class="di-badge dn">≈ was 9.9</span></div></div>
+          <div class="div-item reveal" style="transition-delay:0.16s"><span class="di-name">TV / consumer electronics</span><div class="di-r"><span class="di-v gn">~15 min</span><span class="di-badge dn">↓↓ was 69 hrs</span></div></div>
+          <div class="div-good-note reveal" style="transition-delay:0.20s">✓ CPI is accurate here. Consumer goods genuinely got cheaper or flat in work hours. This is the honest counterargument.</div>
+        </div>
+        <div class="div-vsep"></div>
+        <div class="div-col col-bad">
+          <h3>▲ Wealth-building assets — CPI ignores these</h3>
+          <div class="div-item reveal" style="transition-delay:0.24s"><span class="di-name">Median home (purchase)</span><div class="di-r"><span class="di-v rd">13,661 hrs</span><span class="di-badge up">↑ was 6,946</span></div></div>
+          <div class="div-item reveal" style="transition-delay:0.28s"><span class="di-name">1 troy oz of gold</span><div class="di-r"><span class="di-v gld">126.7 hrs</span><span class="di-badge up">↑ was 11.3</span></div></div>
+          <div class="div-item reveal" style="transition-delay:0.32s"><span class="di-name">Annual college tuition</span><div class="di-r"><span class="di-v rd">360 hrs</span><span class="di-badge up">↑ was 138</span></div></div>
+          <div class="div-item reveal" style="transition-delay:0.36s"><span class="di-name">Annual family health premium</span><div class="di-r"><span class="di-v rd">838 hrs</span><span class="di-badge up">↑ was 138</span></div></div>
+          <div class="div-item reveal" style="transition-delay:0.40s"><span class="di-name">S&amp;P 500 (1 index unit)</span><div class="di-r"><span class="di-v rd">235 hrs</span><span class="di-badge up">↑ was 25.7</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE TIERS -->
+  <section id="lp-tiers">
+    <div class="inner">
+      <div class="tiers-head reveal">
+        <div class="lbl center">The MHIM framework</div>
+        <h2>So we split the basket.</h2>
+        <p>Three categories. Each tracked separately. No averaging away the uncomfortable parts.</p>
+      </div>
+      <div class="tier-grid">
+        <div class="tier-card t1 reveal" style="transition-delay:0.06s">
+          <div class="tc-num">Tier 1 · 40% weight</div>
+          <div class="tc-name">Assets</div>
+          <div class="tc-sub">Home, equities, gold, farmland — things that let your money make money while you sleep.</div>
+          <div class="tc-big">+4,491%</div>
+          <div class="tc-big-sub">since 1971 in dollar terms</div>
+          <div class="tc-items">
+            <div class="tci"><span>Median home</span><strong>$25K → $440K</strong></div>
+            <div class="tci"><span>Gold per oz</span><strong>$41 → $4,083</strong></div>
+            <div class="tci"><span>S&amp;P 500</span><strong>93 → 7,583</strong></div>
+            <div class="tci"><span>Farmland / acre</span><strong>$203 → $4,350</strong></div>
+          </div>
+        </div>
+        <div class="tier-card t2 reveal" style="transition-delay:0.14s">
+          <div class="tc-num">Tier 2 · 45% weight</div>
+          <div class="tc-name">Necessities</div>
+          <div class="tc-sub">Healthcare, tuition, rent, food staples — bills you can't decline or substitute away.</div>
+          <div class="tc-big">+2,642%</div>
+          <div class="tc-big-sub">since 1971 in dollar terms</div>
+          <div class="tc-items">
+            <div class="tci"><span>Family health premium/yr</span><strong>$500 → $26,993</strong></div>
+            <div class="tci"><span>Annual college tuition</span><strong>$500 → $11,600</strong></div>
+            <div class="tci"><span>Monthly median rent</span><strong>$108 → $1,400</strong></div>
+          </div>
+        </div>
+        <div class="tier-card t3 reveal" style="transition-delay:0.22s">
+          <div class="tc-num">Tier 3 · 15% weight</div>
+          <div class="tc-name">Discretionary</div>
+          <div class="tc-sub">Cars, electronics — categories where CPI's story holds up. Included because honesty requires it.</div>
+          <div class="tc-big">+645%</div>
+          <div class="tc-big-sub">since 1971 — below CPI's +900%</div>
+          <div class="tc-items">
+            <div class="tci"><span>New car average</span><strong>$3,500 → $48,400</strong></div>
+            <div class="tci"><span>Consumer electronics</span><strong>↓ ~98% cheaper</strong></div>
+          </div>
+          <div class="tc-note">⚖️ The honest counterargument: consumer goods genuinely got cheaper in real terms. CPI is correct about this category.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAGE TIME MACHINE -->
+  <section id="lp-wage">
+    <div class="inner">
+      <div class="wm-head reveal">
+        <div class="lbl center">Your personal position</div>
+        <h2>Where do <em style="font-style:normal;color:var(--lp-gold)">you</em> fit in this story?</h2>
+        <p>Enter a wage from any year. See what CPI says it should be today — vs. what MHIM says it would take to keep pace with the wealth-building basket.</p>
+      </div>
+      <div class="wm-form reveal" style="transition-delay:0.1s">
+        <div class="wm-field" style="max-width:120px"><label>Year started</label><input type="number" id="wm-year" min="1971" max="2025" value="2010"></div>
+        <div class="wm-field"><label id="wm-lbl">Annual salary $</label><input type="number" id="wm-amt" min="0" step="500" value="50000"></div>
+        <div class="wm-field" style="max-width:200px"><label>Salary type</label><div class="wm-modes"><button class="wm-mode on" id="btn-ann" onclick="lpSetMode('annual')">Annual</button><button class="wm-mode" id="btn-hr" onclick="lpSetMode('hourly')">Hourly</button></div></div>
+        <div class="wm-field" style="max-width:180px"><label>Or</label><button class="wm-mode on" style="background:rgba(45,212,191,0.1);border-color:#2dd4bf;color:#2dd4bf" onclick="lpFillMedian()">Use median wage</button></div>
+        <button class="wm-go" onclick="lpCalc()">Calculate →</button>
+      </div>
+      <div id="wm-res" class="wm-results">
+        <div class="wm-kpis">
+          <div class="wm-kpi"><div class="wk-l">CPI says you'd need today</div><div class="wk-v dim" id="wk-cpi">—</div><div class="wk-s">to match official inflation</div></div>
+          <div class="wm-kpi"><div class="wk-l">Actual median wage growth delivered</div><div class="wk-v teal" id="wk-act">—</div><div class="wk-s" id="wk-act-s">what the economy actually provided</div></div>
+          <div class="wm-kpi"><div class="wk-l">MHIM says you'd need today</div><div class="wk-v gold" id="wk-mhim">—</div><div class="wk-s" id="wk-mhim-s">to keep buying the wealth-building basket</div></div>
+        </div>
+        <div class="wm-chart-wrap"><div class="wm-chart-ttl" id="wm-ct">Your wage — three futures</div><canvas id="wm-chart" height="280"></canvas></div>
+        <div class="wm-note" id="wm-note"><strong>⚖️ How to read this honestly:</strong> The MHIM line is a purchasing-power claim about the wealth-building basket — not a claim that wages should track it. If your raises matched CPI, you kept consuming as before — but the asset ladder moved faster than your income.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MHIM REVEAL -->
+  <section id="lp-reveal">
+    <div class="rv-box">
+      <div class="reveal"><div class="lbl center">The index</div><div class="rv-big" id="rv-num">3,182</div><div class="rv-big-sub">MHIM index (1971 = 100) &nbsp;·&nbsp; vs. CPI at 900</div></div>
+      <div class="reveal" style="transition-delay:0.1s">
+        <p class="rv-text">The 3.5× gap isn't an error.<br>It's a <em>category</em>.</p>
+        <p class="rv-sub">CPI and MHIM aren't disagreeing about prices. They're answering different questions. CPI asks: what does it cost to keep consuming? MHIM asks: what does it cost to build the life most people are actually working toward — one where work eventually becomes optional?</p>
+      </div>
+      <div class="rv-method reveal" style="transition-delay:0.15s">
+        <div class="rv-card">
+          <div class="rv-card-ttl cpi">Official CPI — BLS methodology</div>
+          <div class="rv-row"><strong>Housing (36%)</strong> — Owner's Equivalent Rent: survey of what homeowners think they'd charge for rent. Not actual purchase prices (replaced in 1983).</div>
+          <div class="rv-row"><strong>Healthcare (7%)</strong> — Tracks insurer's retained earnings margin, not the premium you pay.</div>
+          <div class="rv-row"><strong>Education (6%)</strong> — Treated as optional discretionary spending.</div>
+          <div class="rv-row"><strong>Assets (0%)</strong> — Excluded entirely and intentionally.</div>
+          <div class="rv-row"><strong>Formula</strong> — Geometric mean + substitution: if steak inflates and you switch to hamburger, steak inflation stops counting.</div>
+        </div>
+        <div class="rv-card">
+          <div class="rv-card-ttl mhim">MHIM — this site's methodology</div>
+          <div class="rv-row"><strong>Assets (40%)</strong> — Actual FRED home prices, S&amp;P 500, gold, silver, farmland. Entry price to the ownership economy.</div>
+          <div class="rv-row"><strong>Necessities (45%)</strong> — Actual KFF family premiums, actual tuition, food staples, rent, gasoline.</div>
+          <div class="rv-row"><strong>Discretionary (15%)</strong> — New cars, consumer electronics. Includes what genuinely deflated. Honesty requires it.</div>
+          <div class="rv-row"><strong>Formula</strong> — Fixed-weight arithmetic basket. No substitution, no hedonic adjustments.</div>
+        </div>
+      </div>
+      <div class="rv-steelman reveal" style="transition-delay:0.2s">
+        <h4>⚖️ The strongest steelman for CPI</h4>
+        <p>CPI's choices have technical merit. Counting both a full health insurance premium and the underlying medical services would double-count. OER keeps the index about shelter costs rather than investment returns. For a household focused purely on consumption with no plan to build wealth, CPI may genuinely be closer to lived experience. MHIM is explicit about what it measures: the cost of the wealth-building trajectory — not the cost of subsistence.</p>
+      </div>
+      <div class="rv-cue reveal" style="transition-delay:0.25s"><div class="rv-cue-bar"></div><span>The full breakdown is below</span></div>
+    </div>
+  </section>
+
+  <!-- TRANSITION BAR -->
+  <div id="lp-transition">
+    <div class="lp-trans-dot"></div>
+    <span class="lp-trans-label">MHIM Full Dashboard</span>
+    <span class="lp-trans-sub">— use the tabs above to explore each category in detail</span>
+  </div>
+
+</div><!-- end #lp -->
+
+<!-- ══════════════════════════════════════════
+     REACT APP MOUNTS HERE
+══════════════════════════════════════════ -->
+<div id="root"></div>
+<script type="module" src="/src/main.jsx"></script>
+
+<!-- CDN deps — synchronous so inline script below can use them immediately -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+Chart.defaults.color = '#8b949e';
+Chart.defaults.borderColor = '#1e2d45';
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.font.size = 10.5;
+
+// ── Data ──
+const LP_YEARS   = [1971,1980,1990,2000,2010,2020,2025,2026];
+const LP_CPI     = [100,212,344,485,599,730,875,900];
+const LP_MHIM    = [100,269,422,736,1251,2010,3182,3182];
+const LP_WAGES   = [100,189,280,386,525,671,877,888];
+const LP_T1      = [100,404,474,850,1264,2310,4591,4591];
+const LP_T2      = [100,187,422,750,1504,2224,2742,2742];
+const LP_T3      = [100,154,282,391,459,566,745,745];
+const LP_HIST_W  = [3.63,6.85,10.18,14.0,19.06,24.36,31.83,32.23];
+
+function lpInterp(series, year) {
+  if (year <= LP_YEARS[0]) return series[0];
+  if (year >= LP_YEARS[LP_YEARS.length-1]) return series[LP_YEARS.length-1];
+  for (let i = 0; i < LP_YEARS.length-1; i++) {
+    if (year >= LP_YEARS[i] && year <= LP_YEARS[i+1]) {
+      const t = (year - LP_YEARS[i]) / (LP_YEARS[i+1] - LP_YEARS[i]);
+      return Math.exp(Math.log(series[i])*(1-t) + Math.log(series[i+1])*t);
+    }
+  }
+  return series[series.length-1];
+}
+
+const C = { gold:'#d4a843', teal:'#2dd4bf', red:'#f85149', muted:'#8b949e', orange:'#f0883e', green:'#3fb950', border:'#1e2d45' };
+
+// ── Ticker ──
+(function(){
+  const items = [
+    ['Home price','+1,745%'],['Gold','+9,959%'],['S&P 500','+8,110%'],
+    ['CPI (official)','+900%'],['MHIM','+3,182%'],['Wages','+877%'],
+    ['College tuition','+2,220%'],['Health premium','+5,299%'],
+    ['Farmland','+2,044%'],['Monthly rent','+1,196%'],
+  ];
+  const html = items.map(([k,v])=>`<span class="tk">${k}: <span>${v}</span> <span class="tk-dot">·</span></span>`).join('');
+  document.getElementById('tk-inner').innerHTML = html + html;
+})();
+
+// ── Hero entrance ──
+const heroTl = gsap.timeline({ delay:0.2 });
+heroTl
+  .fromTo('.hero-eye',   {opacity:0,y:14},{opacity:1,y:0,duration:0.7})
+  .fromTo('.hero-title', {opacity:0,y:28},{opacity:1,y:0,duration:0.85,ease:'power3.out'},'-=0.4')
+  .fromTo('.hero-sub',   {opacity:0,y:18},{opacity:1,y:0,duration:0.75},'-=0.5')
+  .fromTo('.hero-ctrs',  {opacity:0,y:16},{opacity:1,y:0,duration:0.7,onComplete:lpKickCounters},'-=0.4')
+  .fromTo('.hero-scroll',{opacity:0},{opacity:1,duration:0.7},'-=0.1');
+
+function lpKickCounters() {
+  const cEl = document.getElementById('c-cpi'), mEl = document.getElementById('c-mhim');
+  const co = {v:100}, mo = {v:100};
+  gsap.to(co, {v:900,  duration:2.6, ease:'power2.out', onUpdate(){cEl.textContent = Math.round(co.v).toLocaleString();}});
+  gsap.to(mo, {v:3182, duration:2.6, ease:'power2.out', onUpdate(){mEl.textContent = Math.round(mo.v).toLocaleString();}});
+}
+
+// ── MHIM reveal counter ──
+ScrollTrigger.create({ trigger:'#lp-reveal', start:'top 70%', once:true,
+  onEnter() {
+    const el = document.getElementById('rv-num'), o = {v:100};
+    gsap.to(o, {v:3182, duration:2.0, ease:'power2.out', onUpdate(){el.textContent = Math.round(o.v).toLocaleString();}});
+  }
+});
+
+// ── Scroll reveals ──
+document.querySelectorAll('#lp .reveal').forEach(el => {
+  ScrollTrigger.create({ trigger:el, start:'top 85%', onEnter(){ el.classList.add('in'); }});
+});
+
+// ── Story chart ──
+ScrollTrigger.create({ trigger:'#lp-story', start:'top 55%', once:true,
+  onEnter() {
+    const ctx = document.getElementById('story-chart').getContext('2d');
+    new Chart(ctx, {
+      type:'line',
+      data:{ labels:LP_YEARS, datasets:[
+        { label:'Median Wages', data:LP_WAGES, borderColor:C.teal, backgroundColor:'rgba(45,212,191,0.07)', fill:true, tension:0.38, borderWidth:2, pointRadius:3, pointBackgroundColor:C.teal },
+        { label:'Official CPI',  data:LP_CPI,   borderColor:C.muted, backgroundColor:'transparent', tension:0.38, borderWidth:2, borderDash:[6,4], pointRadius:3, pointBackgroundColor:C.muted }
+      ]},
+      options:{ responsive:true, animation:{duration:1800,easing:'easeInOutQuart'},
+        plugins:{ legend:{position:'top',labels:{boxWidth:14,padding:16}}, tooltip:{mode:'index',intersect:false} },
+        scales:{ x:{grid:{color:C.border}}, y:{grid:{color:C.border}} }
+      }
+    });
+  }
+});
+
+// ── Back button appears when React app is in view ──
+ScrollTrigger.create({
+  trigger: '#root',
+  start: 'top 85%',
+  onEnter()    { document.getElementById('back-btn').classList.add('visible'); },
+  onLeaveBack(){ document.getElementById('back-btn').classList.remove('visible'); }
+});
+
+// ── Wage Time Machine ──
+let lpMode = 'annual', lpChart = null;
+
+function lpSetMode(m) {
+  lpMode = m;
+  document.getElementById('btn-ann').classList.toggle('on', m==='annual');
+  document.getElementById('btn-hr').classList.toggle('on',  m==='hourly');
+  document.getElementById('wm-lbl').textContent = m==='annual' ? 'Annual salary $' : 'Hourly wage $';
+  document.getElementById('wm-amt').step = m==='annual' ? 500 : 0.25;
+  const v = parseFloat(document.getElementById('wm-amt').value);
+  if (m==='annual' && v < 200) document.getElementById('wm-amt').value = Math.round(v*2080);
+  if (m==='hourly' && v > 500) document.getElementById('wm-amt').value = (v/2080).toFixed(2);
+}
+
+function lpFillMedian() {
+  const yr = Math.round(parseFloat(document.getElementById('wm-year').value)) || 2010;
+  const mw = lpInterp(LP_HIST_W, yr);
+  if (lpMode==='annual') document.getElementById('wm-amt').value = Math.round(mw*2080);
+  else document.getElementById('wm-amt').value = mw.toFixed(2);
+}
+
+function lpFmt(v, annual) { return annual ? '$'+Math.round(v).toLocaleString() : '$'+v.toFixed(2); }
+
+function lpCalc() {
+  const yr = Math.round(parseFloat(document.getElementById('wm-year').value));
+  let amt = parseFloat(document.getElementById('wm-amt').value);
+  if (!yr || yr<1971 || yr>2025 || !amt || amt<=0) { alert('Enter a year 1971–2025 and a positive amount.'); return; }
+  const annual = lpMode==='annual';
+  if (!annual) amt *= 2080;
+
+  const fac = (s,y) => lpInterp(s,y)/lpInterp(s,yr);
+  const p   = s => y => amt*fac(s,y);
+  const cP=p(LP_CPI), mP=p(LP_MHIM), aP=p(LP_WAGES), t1P=p(LP_T1), t2P=p(LP_T2), t3P=p(LP_T3);
+
+  const CY=2026, yrs=[];
+  for (let y=yr; y<=CY; y++) yrs.push(y);
+  const D = annual ? 1 : 1/2080;
+  const cN=cP(CY), mN=mP(CY), aN=aP(CY);
+
+  document.getElementById('wk-cpi').textContent  = lpFmt(cN*D,annual);
+  document.getElementById('wk-mhim').textContent = lpFmt(mN*D,annual);
+  document.getElementById('wk-act').textContent  = lpFmt(aN*D,annual);
+  const avsc = aN/cN;
+  document.getElementById('wk-act-s').textContent = Math.abs(avsc-1)<0.06 ? 'Almost exactly the CPI path' : avsc>1 ? 'Ahead of the CPI path' : 'Behind even the CPI path';
+  document.getElementById('wk-mhim-s').textContent = (mN/cN).toFixed(1)+'× the CPI answer';
+  document.getElementById('wm-ct').textContent = `Your ${yr} ${annual?'salary':'wage'} of ${lpFmt(amt*D,annual)} — three futures`;
+  const sf = ((1-cN/mN)*100).toFixed(0);
+  document.getElementById('wm-note').innerHTML = `<strong>⚖️ How to read this honestly:</strong> If your raises matched CPI, you can still consume like you did in ${yr} — but you fall <strong style="color:#d4a843">${sf}% short</strong> of the income needed to keep climbing the asset ladder at the same pace. Tier 3 (discretionary, ${lpFmt(t3P(CY)*D,annual)}) usually lands <em>below</em> CPI — consumption got cheaper while accumulation got dearer.`;
+
+  if (lpChart) { lpChart.destroy(); lpChart = null; }
+  const ctx = document.getElementById('wm-chart').getContext('2d');
+  lpChart = new Chart(ctx, {
+    type:'line',
+    data:{ labels:yrs, datasets:[
+      { label:'MHIM — wealth basket',      data:yrs.map(y=>(mP(y)*D).toFixed(annual?0:2)),  borderColor:C.gold,   backgroundColor:'rgba(212,168,67,0.09)', fill:true, tension:0.3, borderWidth:2.5, pointRadius:2 },
+      { label:'CPI-adjusted',              data:yrs.map(y=>(cP(y)*D).toFixed(annual?0:2)),  borderColor:C.muted,  backgroundColor:'transparent', tension:0.3, borderWidth:2, borderDash:[5,4], pointRadius:2 },
+      { label:'Actual median wage growth', data:yrs.map(y=>(aP(y)*D).toFixed(annual?0:2)),  borderColor:C.teal,   backgroundColor:'transparent', tension:0.3, borderWidth:2, pointRadius:2 },
+      { label:'Tier 1: Assets',            data:yrs.map(y=>(t1P(y)*D).toFixed(annual?0:2)), borderColor:C.red,    backgroundColor:'transparent', tension:0.3, borderWidth:1.5, borderDash:[3,4], pointRadius:0 },
+      { label:'Tier 2: Necessities',       data:yrs.map(y=>(t2P(y)*D).toFixed(annual?0:2)), borderColor:C.orange, backgroundColor:'transparent', tension:0.3, borderWidth:1.5, borderDash:[3,4], pointRadius:0 },
+      { label:'Tier 3: Discretionary',     data:yrs.map(y=>(t3P(y)*D).toFixed(annual?0:2)), borderColor:C.green,  backgroundColor:'transparent', tension:0.3, borderWidth:1.5, borderDash:[3,4], pointRadius:0 },
+    ]},
+    options:{ responsive:true, animation:{duration:1100},
+      plugins:{ legend:{position:'top',labels:{boxWidth:13,padding:12,font:{size:10}}}, tooltip:{mode:'index',intersect:false,callbacks:{label:c=>`${c.dataset.label}: $${parseFloat(c.parsed.y).toLocaleString()}`}} },
+      scales:{ x:{grid:{color:C.border}}, y:{grid:{color:C.border},ticks:{callback:v=>'$'+Number(v).toLocaleString()}} }
+    }
+  });
+
+  const res = document.getElementById('wm-res');
+  res.classList.add('show');
+  setTimeout(()=>res.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+</script>
+</body>
 </html>
