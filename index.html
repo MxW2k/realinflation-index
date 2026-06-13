@@ -246,6 +246,27 @@ body { overflow-x: hidden; }
 .lp-trans-dot { width:8px; height:8px; border-radius:50%; background:var(--lp-gold); flex-shrink:0; }
 .lp-trans-label { font-family:var(--lp-mono); font-size:0.75rem; color:var(--lp-gold); letter-spacing:0.08em; text-transform:uppercase; }
 .lp-trans-sub { font-size:0.78rem; color:var(--lp-text-dim); margin-left:8px; }
+
+/* PRODUCTIVITY GAP */
+#lp-prod { padding:100px 0; background:var(--lp-bg2); }
+.prod-head { text-align:center; margin-bottom:52px; }
+.prod-head h2 { font-size:clamp(1.9rem,3.8vw,2.8rem); font-weight:900; letter-spacing:-0.02em; margin-bottom:12px; line-height:1.1; color:var(--lp-text); }
+.prod-head p { font-size:0.95rem; color:var(--lp-text-dim); max-width:560px; margin:0 auto; }
+.prod-chart-wrap { margin-bottom:36px; }
+.prod-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
+@media(max-width:860px){.prod-stats{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:500px){.prod-stats{grid-template-columns:1fr;}}
+.ps-kpi { background:var(--lp-card); border:1px solid var(--lp-border); border-radius:12px; padding:20px; }
+.ps-lbl { font-size:0.74rem; color:var(--lp-text-dim); margin-bottom:8px; line-height:1.4; }
+.ps-val { font-family:var(--lp-mono); font-size:1.75rem; font-weight:600; line-height:1; margin-bottom:4px; }
+.ps-val.gold { color:var(--lp-gold); } .ps-val.teal { color:var(--lp-teal); } .ps-val.red { color:var(--lp-red); } .ps-val.dim { color:var(--lp-text-dim); }
+.ps-sub { font-size:0.71rem; color:var(--lp-text-dim); }
+.prod-bridge { background:var(--lp-gold-dim); border:1px solid rgba(212,168,67,0.22); border-radius:12px; padding:22px 26px; margin-bottom:20px; }
+.prod-bridge strong { color:var(--lp-gold); }
+.prod-bridge p { font-size:0.9rem; color:var(--lp-text); line-height:1.78; }
+.prod-steelman { background:rgba(248,81,73,0.06); border:1px solid rgba(248,81,73,0.2); border-radius:12px; padding:18px 22px; }
+.prod-steelman h4 { font-size:0.8rem; color:var(--lp-red); font-weight:700; margin-bottom:8px; }
+.prod-steelman p { font-size:0.81rem; color:var(--lp-text-dim); line-height:1.65; }
   </style>
 </head>
 <body>
@@ -319,6 +340,53 @@ body { overflow-x: hidden; }
         <p>CPI measures the cost of consuming — groceries, gasoline, rent, appliances. It was never designed to track the cost of building a life you no longer have to work for.</p>
         <div class="catch-quote">"By design, the CPI excludes every asset class entirely. Not as an oversight — it's the stated purpose. The flaw is using CPI to answer a question it was never asked."</div>
         <p>A home. A retirement account. Equities. Gold. The inputs to generational wealth. None appear in CPI. Zero percent weight. By design.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- PRODUCTIVITY GAP -->
+  <section id="lp-prod">
+    <div class="inner">
+      <div class="prod-head reveal">
+        <div class="lbl center">The extraction gap</div>
+        <h2>You got <em style="font-style:normal;color:var(--lp-gold)">75% more productive</em>.<br>Your real wage barely moved.</h2>
+        <p>Since 1971, U.S. worker output per hour rose +175% in real terms. Real median wages over the same period: nearly flat. The gap between what workers produced and what they captured is the extraction — and it had to land somewhere.</p>
+      </div>
+      <div class="prod-chart-wrap reveal" style="transition-delay:0.1s">
+        <div class="lp-chart-card">
+          <div class="lp-chart-title">Productivity vs. Real Wages — 1971–2026 (both indexed 1971=100, inflation-adjusted) · shaded area = value not passed to workers</div>
+          <canvas id="prod-chart" height="260"></canvas>
+        </div>
+      </div>
+      <div class="prod-stats">
+        <div class="ps-kpi reveal" style="transition-delay:0.04s">
+          <div class="ps-lbl">Productivity growth since 1971</div>
+          <div class="ps-val gold">+175%</div>
+          <div class="ps-sub">output per hour, real terms</div>
+        </div>
+        <div class="ps-kpi reveal" style="transition-delay:0.08s">
+          <div class="ps-lbl">Real wage growth since 1971</div>
+          <div class="ps-val teal">≈ flat</div>
+          <div class="ps-sub">CPI-adjusted; back near 1971 level</div>
+        </div>
+        <div class="ps-kpi reveal" style="transition-delay:0.12s">
+          <div class="ps-lbl">If wages tracked productivity today</div>
+          <div class="ps-val dim">~$72/hr</div>
+          <div class="ps-sub">vs. actual median $32.23/hr (EPI est.)</div>
+        </div>
+        <div class="ps-kpi reveal" style="transition-delay:0.16s">
+          <div class="ps-lbl">Uncaptured value per worker/yr</div>
+          <div class="ps-val red">~$82K</div>
+          <div class="ps-sub">at 40 hrs/wk · ($72−$32.23)×2,080</div>
+        </div>
+      </div>
+      <div class="prod-bridge reveal" style="transition-delay:0.2s">
+        <p><strong>Where did the extraction go?</strong> Productivity gains that didn't flow to wages flowed instead to corporate profits — then into dividends, buybacks, and retained earnings. That capital found its way into equities, real estate, and hard assets. This is why MHIM's Tier 1 (assets) rose +4,491% while real wages stayed flat: <strong>the productivity gap and the asset inflation gap are the same phenomenon, measured from opposite sides of the ledger.</strong> Workers created the value. Capital captured it as price appreciation.</p>
+      </div>
+      <div class="prod-steelman reveal" style="transition-delay:0.24s">
+        <h4>⚖️ The strongest counterargument</h4>
+        <p>The raw gap overstates extraction for several reasons. First, employer healthcare costs count as compensation but not as take-home wages — an honest comparison should add these back. Second, productivity and wages are often deflated using different price indexes (GDP deflator vs. CPI), which mechanically widens the gap. Third, the shift from manufacturing to services changes what "output per hour" means. EPI's best estimate after these adjustments still finds a 60–70% unexplained gap — substantial, but smaller than the raw numbers suggest. The labor share of income (workers' cut of all output) has fallen from ~65% in 1971 to ~56% today; that 9-point decline is the least contested measure of the shift.</p>
       </div>
     </div>
   </section>
@@ -476,12 +544,216 @@ body { overflow-x: hidden; }
      REACT APP MOUNTS HERE
 ══════════════════════════════════════════ -->
 <div id="root"></div>
-<script type="module" src="/src/main.jsx"></script>
+<script type="module" src="/src/main.jsx">
+// ── Productivity Gap chart ──
+ScrollTrigger.create({ trigger:'#lp-prod', start:'top 55%', once:true,
+  onEnter() {
+    const PROD_IDX = [100,118,140,178,212,248,275,278];
+    const REAL_W   = [100, 89, 81, 80, 88, 92,100, 99];
+    const ctx = document.getElementById('prod-chart').getContext('2d');
+    new Chart(ctx, {
+      type:'line',
+      data:{ labels:LP_YEARS, datasets:[
+        {
+          label:'Productivity (output/hr)',
+          data:PROD_IDX,
+          borderColor:C.gold,
+          backgroundColor:'rgba(248,81,73,0.13)',
+          fill:'+1',
+          tension:0.38, borderWidth:2.5, pointRadius:3, pointBackgroundColor:C.gold
+        },
+        {
+          label:'Real Median Wages',
+          data:REAL_W,
+          borderColor:C.teal,
+          backgroundColor:'rgba(45,212,191,0.07)',
+          fill:true,
+          tension:0.38, borderWidth:2, pointRadius:3, pointBackgroundColor:C.teal
+        }
+      ]},
+      options:{
+        responsive:true,
+        animation:{duration:1800,easing:'easeInOutQuart'},
+        plugins:{
+          legend:{position:'top',labels:{boxWidth:14,padding:16}},
+          tooltip:{mode:'index',intersect:false,callbacks:{
+            afterBody(items){
+              const p=items.find(i=>i.datasetIndex===0), w=items.find(i=>i.datasetIndex===1);
+              if(p&&w) return ['','Extraction zone: '+(p.parsed.y-w.parsed.y).toFixed(0)+' index pts'];
+              return [];
+            }
+          }}
+        },
+        scales:{
+          x:{grid:{color:C.border}},
+          y:{grid:{color:C.border},
+             title:{display:true,text:'Index (1971 = 100)',color:C.muted,font:{size:10}},
+             ticks:{callback:v=>v+''}
+          }
+        }
+      }
+    });
+  }
+});
+</script>
 
 <!-- CDN deps — synchronous so inline script below can use them immediately -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js">
+// ── Productivity Gap chart ──
+ScrollTrigger.create({ trigger:'#lp-prod', start:'top 55%', once:true,
+  onEnter() {
+    const PROD_IDX = [100,118,140,178,212,248,275,278];
+    const REAL_W   = [100, 89, 81, 80, 88, 92,100, 99];
+    const ctx = document.getElementById('prod-chart').getContext('2d');
+    new Chart(ctx, {
+      type:'line',
+      data:{ labels:LP_YEARS, datasets:[
+        {
+          label:'Productivity (output/hr)',
+          data:PROD_IDX,
+          borderColor:C.gold,
+          backgroundColor:'rgba(248,81,73,0.13)',
+          fill:'+1',
+          tension:0.38, borderWidth:2.5, pointRadius:3, pointBackgroundColor:C.gold
+        },
+        {
+          label:'Real Median Wages',
+          data:REAL_W,
+          borderColor:C.teal,
+          backgroundColor:'rgba(45,212,191,0.07)',
+          fill:true,
+          tension:0.38, borderWidth:2, pointRadius:3, pointBackgroundColor:C.teal
+        }
+      ]},
+      options:{
+        responsive:true,
+        animation:{duration:1800,easing:'easeInOutQuart'},
+        plugins:{
+          legend:{position:'top',labels:{boxWidth:14,padding:16}},
+          tooltip:{mode:'index',intersect:false,callbacks:{
+            afterBody(items){
+              const p=items.find(i=>i.datasetIndex===0), w=items.find(i=>i.datasetIndex===1);
+              if(p&&w) return ['','Extraction zone: '+(p.parsed.y-w.parsed.y).toFixed(0)+' index pts'];
+              return [];
+            }
+          }}
+        },
+        scales:{
+          x:{grid:{color:C.border}},
+          y:{grid:{color:C.border},
+             title:{display:true,text:'Index (1971 = 100)',color:C.muted,font:{size:10}},
+             ticks:{callback:v=>v+''}
+          }
+        }
+      }
+    });
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js">
+// ── Productivity Gap chart ──
+ScrollTrigger.create({ trigger:'#lp-prod', start:'top 55%', once:true,
+  onEnter() {
+    const PROD_IDX = [100,118,140,178,212,248,275,278];
+    const REAL_W   = [100, 89, 81, 80, 88, 92,100, 99];
+    const ctx = document.getElementById('prod-chart').getContext('2d');
+    new Chart(ctx, {
+      type:'line',
+      data:{ labels:LP_YEARS, datasets:[
+        {
+          label:'Productivity (output/hr)',
+          data:PROD_IDX,
+          borderColor:C.gold,
+          backgroundColor:'rgba(248,81,73,0.13)',
+          fill:'+1',
+          tension:0.38, borderWidth:2.5, pointRadius:3, pointBackgroundColor:C.gold
+        },
+        {
+          label:'Real Median Wages',
+          data:REAL_W,
+          borderColor:C.teal,
+          backgroundColor:'rgba(45,212,191,0.07)',
+          fill:true,
+          tension:0.38, borderWidth:2, pointRadius:3, pointBackgroundColor:C.teal
+        }
+      ]},
+      options:{
+        responsive:true,
+        animation:{duration:1800,easing:'easeInOutQuart'},
+        plugins:{
+          legend:{position:'top',labels:{boxWidth:14,padding:16}},
+          tooltip:{mode:'index',intersect:false,callbacks:{
+            afterBody(items){
+              const p=items.find(i=>i.datasetIndex===0), w=items.find(i=>i.datasetIndex===1);
+              if(p&&w) return ['','Extraction zone: '+(p.parsed.y-w.parsed.y).toFixed(0)+' index pts'];
+              return [];
+            }
+          }}
+        },
+        scales:{
+          x:{grid:{color:C.border}},
+          y:{grid:{color:C.border},
+             title:{display:true,text:'Index (1971 = 100)',color:C.muted,font:{size:10}},
+             ticks:{callback:v=>v+''}
+          }
+        }
+      }
+    });
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
+// ── Productivity Gap chart ──
+ScrollTrigger.create({ trigger:'#lp-prod', start:'top 55%', once:true,
+  onEnter() {
+    const PROD_IDX = [100,118,140,178,212,248,275,278];
+    const REAL_W   = [100, 89, 81, 80, 88, 92,100, 99];
+    const ctx = document.getElementById('prod-chart').getContext('2d');
+    new Chart(ctx, {
+      type:'line',
+      data:{ labels:LP_YEARS, datasets:[
+        {
+          label:'Productivity (output/hr)',
+          data:PROD_IDX,
+          borderColor:C.gold,
+          backgroundColor:'rgba(248,81,73,0.13)',
+          fill:'+1',
+          tension:0.38, borderWidth:2.5, pointRadius:3, pointBackgroundColor:C.gold
+        },
+        {
+          label:'Real Median Wages',
+          data:REAL_W,
+          borderColor:C.teal,
+          backgroundColor:'rgba(45,212,191,0.07)',
+          fill:true,
+          tension:0.38, borderWidth:2, pointRadius:3, pointBackgroundColor:C.teal
+        }
+      ]},
+      options:{
+        responsive:true,
+        animation:{duration:1800,easing:'easeInOutQuart'},
+        plugins:{
+          legend:{position:'top',labels:{boxWidth:14,padding:16}},
+          tooltip:{mode:'index',intersect:false,callbacks:{
+            afterBody(items){
+              const p=items.find(i=>i.datasetIndex===0), w=items.find(i=>i.datasetIndex===1);
+              if(p&&w) return ['','Extraction zone: '+(p.parsed.y-w.parsed.y).toFixed(0)+' index pts'];
+              return [];
+            }
+          }}
+        },
+        scales:{
+          x:{grid:{color:C.border}},
+          y:{grid:{color:C.border},
+             title:{display:true,text:'Index (1971 = 100)',color:C.muted,font:{size:10}},
+             ticks:{callback:v=>v+''}
+          }
+        }
+      }
+    });
+  }
+});
+</script>
 
 <script>
 gsap.registerPlugin(ScrollTrigger);
@@ -653,6 +925,57 @@ function lpCalc() {
   res.classList.add('show');
   setTimeout(()=>res.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
 }
+
+// ── Productivity Gap chart ──
+ScrollTrigger.create({ trigger:'#lp-prod', start:'top 55%', once:true,
+  onEnter() {
+    const PROD_IDX = [100,118,140,178,212,248,275,278];
+    const REAL_W   = [100, 89, 81, 80, 88, 92,100, 99];
+    const ctx = document.getElementById('prod-chart').getContext('2d');
+    new Chart(ctx, {
+      type:'line',
+      data:{ labels:LP_YEARS, datasets:[
+        {
+          label:'Productivity (output/hr)',
+          data:PROD_IDX,
+          borderColor:C.gold,
+          backgroundColor:'rgba(248,81,73,0.13)',
+          fill:'+1',
+          tension:0.38, borderWidth:2.5, pointRadius:3, pointBackgroundColor:C.gold
+        },
+        {
+          label:'Real Median Wages',
+          data:REAL_W,
+          borderColor:C.teal,
+          backgroundColor:'rgba(45,212,191,0.07)',
+          fill:true,
+          tension:0.38, borderWidth:2, pointRadius:3, pointBackgroundColor:C.teal
+        }
+      ]},
+      options:{
+        responsive:true,
+        animation:{duration:1800,easing:'easeInOutQuart'},
+        plugins:{
+          legend:{position:'top',labels:{boxWidth:14,padding:16}},
+          tooltip:{mode:'index',intersect:false,callbacks:{
+            afterBody(items){
+              const p=items.find(i=>i.datasetIndex===0), w=items.find(i=>i.datasetIndex===1);
+              if(p&&w) return ['','Extraction zone: '+(p.parsed.y-w.parsed.y).toFixed(0)+' index pts'];
+              return [];
+            }
+          }}
+        },
+        scales:{
+          x:{grid:{color:C.border}},
+          y:{grid:{color:C.border},
+             title:{display:true,text:'Index (1971 = 100)',color:C.muted,font:{size:10}},
+             ticks:{callback:v=>v+''}
+          }
+        }
+      }
+    });
+  }
+});
 </script>
 </body>
 </html>
